@@ -42,7 +42,7 @@ export const CollapsibleNav: React.FC<CollapsibleNavProps> = ({
     <>
       {/* Sleek Vertical Left-Side Navigation Bar */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-40 bg-[#05080D]/95 border-r border-[#1C2A33] backdrop-blur-xl transition-all duration-300 select-none flex flex-col justify-between ${
+        className={`glass-nav fixed top-0 left-0 bottom-0 z-40 bg-[#05080D]/95 border-r border-[#1C2A33] backdrop-blur-xl transition-all duration-300 select-none flex flex-col justify-between ${
           isCollapsed ? 'w-14' : 'w-64'
         }`}
       >
@@ -93,7 +93,7 @@ export const CollapsibleNav: React.FC<CollapsibleNavProps> = ({
           <div className="space-y-1">
             {!isCollapsed && (
               <div className="px-2 pb-1 font-data text-[9px] text-[#6E8391] uppercase tracking-widest">
-                SURVEILLANCE VIEWS
+                MONITORING & ANALYSIS
               </div>
             )}
 
@@ -167,18 +167,24 @@ export const CollapsibleNav: React.FC<CollapsibleNavProps> = ({
               {!isCollapsed && <span>PINN ML MODEL</span>}
             </button>
 
+            {!isCollapsed && (
+              <div className="px-2 pt-3 pb-1 font-data text-[9px] text-[#6E8391] uppercase tracking-widest">
+                SIMULATION
+              </div>
+            )}
+
             <button
               id="nav-cyclone-sim-btn"
               onClick={() => onNavigate('cyclone-simulator')}
               className={`w-full py-2.5 px-2.5 rounded-none font-data text-xs uppercase tracking-wider transition-all flex items-center gap-3 ${
                 currentScreen === 'cyclone-simulator'
-                  ? 'bg-[#3FE0C7]/15 text-[#3FE0C7] border-l-2 border-[#3FE0C7] font-bold'
-                  : 'text-[#6E8391] hover:text-[#E8EDF0] hover:bg-[#0A1119]'
+                  ? 'bg-[#FF8A5B]/15 text-[#FF8A5B] border-l-2 border-[#FF8A5B] font-bold'
+                  : 'text-[#6E8391] hover:text-[#FF8A5B] hover:bg-[#0A1119]'
               }`}
               title="Price-Weller-Pinkel (PWP) What-If Cyclone Simulator"
             >
-              <Wind className="w-4 h-4 shrink-0 text-[#3FE0C7]" />
-              {!isCollapsed && <span>CYCLONE TWIN</span>}
+              <Wind className="w-4 h-4 shrink-0 text-[#FF8A5B]" />
+              {!isCollapsed && <span className="text-[#FF8A5B] font-semibold">CYCLONE TWIN</span>}
             </button>
           </div>
 

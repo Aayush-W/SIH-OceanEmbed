@@ -1035,13 +1035,7 @@ export const TacticalVoiceAgent: React.FC<TacticalVoiceAgentProps> = ({
   return (
     <>
       {/* FLOATING HUD CONTROLS: MIC, MUTE & INTEL WINDOW */}
-      <div
-        className={`fixed z-50 flex items-center gap-2 transition-all ${
-          currentScreen === 'cyclone-simulator'
-            ? 'bottom-3 right-4'
-            : 'bottom-20 right-6'
-        }`}
-      >
+      <div className="fixed bottom-20 right-6 z-50 flex items-center gap-2">
         {/* Main Glowing Tactical Mic Button */}
         <button
           onClick={toggleListening}

@@ -48,7 +48,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-screen h-screen bg-[#05080D] text-[#E8EDF0] overflow-hidden flex font-space select-none">
+    <div className="app-shell relative w-screen h-screen bg-[#05080D] text-[#E8EDF0] overflow-hidden flex font-space select-none">
       {/* Background Technical Grid */}
       <div className="absolute inset-0 grid-overlay z-0 pointer-events-none"></div>
 
@@ -69,7 +69,7 @@ export default function App() {
           isNavCollapsed ? 'pl-14' : 'pl-64'
         }`}
       >
-        <main className={`relative flex-1 w-full h-full overflow-hidden ${currentScreen === 'cyclone-simulator' ? 'pb-0' : 'pb-16'}`}>
+        <main className="relative flex-1 w-full h-full pb-16 overflow-hidden">
           {/* 1. 3D Globe Screen */}
           {currentScreen === 'globe' && (
             <div className="relative w-full h-full">
@@ -164,19 +164,17 @@ export default function App() {
           )}
         </main>
 
-        {/* Bottom Date/Time Scrubber & Layer Controls (Seasonal Monsoon Context - Not shown on Cyclone Single-Storm Twin) */}
-        {currentScreen !== 'cyclone-simulator' && (
-          <TimelineScrubber
-            currentDate={currentDate}
-            onDateChange={(d) => setCurrentDate(d)}
-            isPlaying={isPlaying}
-            onTogglePlay={() => setIsPlaying(!isPlaying)}
-            activeLayer={activeLayer}
-            onChangeLayer={(layer) => setActiveLayer(layer)}
-            autoRotate={autoRotate}
-            onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
-          />
-        )}
+        {/* Bottom Date/Time Scrubber & Layer Controls */}
+        <TimelineScrubber
+          currentDate={currentDate}
+          onDateChange={(d) => setCurrentDate(d)}
+          isPlaying={isPlaying}
+          onTogglePlay={() => setIsPlaying(!isPlaying)}
+          activeLayer={activeLayer}
+          onChangeLayer={(layer) => setActiveLayer(layer)}
+          autoRotate={autoRotate}
+          onToggleAutoRotate={() => setAutoRotate(!autoRotate)}
+        />
       </div>
 
       {/* Palantir-Style Tactical Voice AI Assistant */}

@@ -408,7 +408,7 @@ export const CycloneTwinHero: React.FC<CycloneTwinHeroProps> = ({
   const status = simulation.feedbackType === 'STRONG_NEGATIVE' ? 'SELF-INDUCED WEAKENING' : simulation.feedbackType === 'MODERATE_NEGATIVE' ? 'OCEAN FEEDBACK ACTIVE' : 'INTENSIFICATION SUPPORTED';
 
   return (
-    <section className="cyclone-twin-hero" aria-label="Cyclone digital twin">
+    <section className="cyclone-twin-hero liquid-glass liquid-glass-hero" aria-label="Cyclone digital twin">
       <div className="cyclone-twin-hero-header">
         <div>
           <div className="cyclone-twin-kicker"><Radio className="w-3.5 h-3.5" /> LIVE DIGITAL TWIN // {preset.name.toUpperCase()}</div>

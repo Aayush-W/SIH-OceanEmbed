@@ -12,7 +12,10 @@ app.use(express.json());
 // Serve a compact browser-safe view of the precomputed active observation plan.
 app.get('/api/observation-planner', (_req, res) => {
   try {
-    const plannerPath = path.join(process.cwd(), 'active_observation_planner', 'top_argo_locations.csv');
+    // ML artifacts are kept under data/ in the consolidated SIH repository.
+    // Keeping the API path relative to this server lets both dev and production
+    // deployments read the same checked-in planner output.
+    const plannerPath = path.join(process.cwd(), 'data', 'active_observation_planner', 'top_argo_locations.csv');
     const source = fs.readFileSync(plannerPath, 'utf8').trim();
     const [headerLine, ...rows] = source.split(/\r?\n/);
     const headers = headerLine.split(',');
@@ -27,8 +30,12 @@ app.get('/api/observation-planner', (_req, res) => {
     });
 
     return res.json({
-      source: 'active_observation_planner/top_argo_locations.csv',
-      generatedFrom: ['active_observation_planner.pkl', 'uncertainty_ensemble.pkl', 'planner_results.csv'],
+      source: 'data/active_observation_planner/top_argo_locations.csv',
+      generatedFrom: [
+        'data/active_observation_planner/active_observation_planner.pkl',
+        'data/active_observation_planner/uncertainty_ensemble.pkl',
+        'data/active_observation_planner/planner_results.csv',
+      ],
       points,
     });
   } catch {

@@ -33,6 +33,7 @@ interface CycloneMapExplorerProps {
   selectedHour: number;
   onSelectHour: (hour: number) => void;
   onSelectStation?: (stationId: string) => void;
+  geoData?: CycloneGeospatialResult;
   showPlanner?: boolean;
   className?: string;
   isCompact?: boolean;
@@ -45,6 +46,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
   selectedHour,
   onSelectHour,
   onSelectStation,
+  geoData: geospatialData,
   showPlanner = false,
   className = '',
   isCompact = false,
@@ -61,7 +63,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
   const stationsLayerRef = useRef<L.LayerGroup | null>(null);
   const plannerLayerRef = useRef<L.LayerGroup | null>(null);
 
-  const [basemap, setBasemap] = useState<BasemapType>('DARK_TACTICAL');
+  const [basemap, setBasemap] = useState<BasemapType>('SATELLITE_HYBRID');
   const [showColdWake, setShowColdWake] = useState<boolean>(true);
   const [showBaseTrack, setShowBaseTrack] = useState<boolean>(true);
   const [showWindRadii, setShowWindRadii] = useState<boolean>(true);
@@ -70,9 +72,10 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
   const [plannerPoints, setPlannerPoints] = useState<Array<Record<string, string | number>>>([]);
 
   // Compute full geospatial cyclone state
-  const geoData: CycloneGeospatialResult = useMemo(() => {
+  const computedGeoData: CycloneGeospatialResult = useMemo(() => {
     return computeCycloneGeospatialData(preset, stationData, params, selectedHour);
   }, [preset, stationData, params, selectedHour]);
+  const geoData = geospatialData ?? computedGeoData;
 
   // Timeline scrubber auto-play timer
   useEffect(() => {
@@ -112,21 +115,21 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
     eyeMarkerLayerRef.current = L.layerGroup().addTo(map);
 
     // Initial tile layer
-    const tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+    const tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
     tileLayerRef.current = L.tileLayer(tileUrl, { maxZoom: 18, subdomains: 'abcd' }).addTo(map);
 
+    const resizeObserver = new ResizeObserver(() => map.invalidateSize({ animate: false }));
+    resizeObserver.observe(mapContainerRef.current);
+
     return () => {
+      resizeObserver.disconnect();
       map.remove();
       mapInstanceRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (!showPlanner) {
-      setPlannerPoints([]);
-      return;
-    }
-
+    if (!showPlanner) return;
     let cancelled = false;
     fetch('/api/observation-planner')
       .then((response) => response.ok ? response.json() : Promise.reject(new Error('planner unavailable')))
@@ -136,7 +139,6 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
       .catch(() => {
         if (!cancelled) setPlannerPoints([]);
       });
-
     return () => { cancelled = true; };
   }, [showPlanner]);
 
@@ -149,8 +151,10 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
       map.removeLayer(tileLayerRef.current);
     }
 
-    let url = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-    if (basemap === 'SATELLITE_HYBRID') {
+    let url = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    if (basemap === 'DARK_TACTICAL') {
+      url = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+    } else if (basemap === 'SATELLITE_HYBRID') {
       url = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
     } else if (basemap === 'OCEAN_BATHYMETRY') {
       url = 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}';
@@ -185,7 +189,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
         [minLat, minLon],
         [maxLat, maxLon],
       ],
-      { padding: [25, 25], maxZoom: isCompact ? 7 : 9, animate: false }
+      { padding: [28, 28], maxZoom: isCompact ? 7 : 9, animate: false }
     );
   }, [preset.id, stationData.station.id, params.trackDistanceKm, params.rmaxKm, isCompact, showPlanner, plannerPoints]);
 
@@ -212,7 +216,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
         `<div class="font-mono text-xs bg-[#0A1119] border border-[#E8EDF0] p-1.5 text-[#E8EDF0]">
           <div class="font-bold uppercase">ACTIVE OBSERVATION PLANNER</div>
           <div>Priority: <b>${priority.toFixed(3)}</b></div>
-          <div>Uncertainty: <b>+/-${uncertainty.toFixed(3)}</b></div>
+          <div>Uncertainty: <b>±${uncertainty.toFixed(3)}</b></div>
           <div>Argo distance: <b>${Number(point.nearest_argo_distance_km).toFixed(0)} km</b></div>
         </div>`,
         { sticky: true },

@@ -602,7 +602,7 @@ export const GlobeView: React.FC<GlobeViewProps> = ({
     >
       {/* Globe Controls & Texture Switcher HUD */}
       <div className="absolute top-4 left-6 z-20 flex flex-wrap items-center gap-2">
-        <div className="bg-[#0A1119]/95 border border-[#1C2A33] p-1 backdrop-blur-md flex items-center gap-1 shadow-2xl">
+        <div className="glass-control bg-[#0A1119]/95 border border-[#1C2A33] p-1 backdrop-blur-md flex items-center gap-1 shadow-2xl">
           <button
             onClick={() => {
               if (onChangeGlobeStyle) onChangeGlobeStyle('SATELLITE');
@@ -666,14 +666,14 @@ export const GlobeView: React.FC<GlobeViewProps> = ({
       <div className="absolute right-6 bottom-24 z-20 flex flex-col gap-1.5">
         <button
           onClick={() => handleZoom(-0.6)}
-          className="w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
+          className="glass-control w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
           title="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom(0.6)}
-          className="w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
+          className="glass-control w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
           title="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
@@ -686,7 +686,7 @@ export const GlobeView: React.FC<GlobeViewProps> = ({
               globeGroupRef.current.rotation.set(0.22, -Math.PI * 0.72, 0);
             }
           }}
-          className="w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
+          className="glass-control w-8 h-8 bg-[#0A1119]/95 hover:bg-[#3FE0C7] hover:text-[#05080D] text-[#E8EDF0] border border-[#1C2A33] flex items-center justify-center transition-colors shadow-xl"
           title="Reset Globe View"
         >
           <Compass className="w-4 h-4" />
@@ -723,4 +723,3 @@ export const GlobeView: React.FC<GlobeViewProps> = ({
     </div>
   );
 };
-

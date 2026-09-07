@@ -76,7 +76,7 @@ export const TimelineScrubber: React.FC<TimelineScrubberProps> = ({
   return (
     <div
       id="bottom-timeline-bar"
-      className="fixed bottom-0 left-0 right-0 h-16 bg-[#05080D]/95 border-t border-[#1C2A33] z-30 px-6 flex items-center justify-between backdrop-blur-md select-none gap-4"
+      className="glass-timeline fixed bottom-0 left-0 right-0 h-16 bg-[#05080D]/95 border-t border-[#1C2A33] z-30 px-6 flex items-center justify-between backdrop-blur-md select-none gap-4"
     >
       {/* Left: Playback & Date Readout & LIVE NOW Button */}
       <div className="flex items-center gap-3 min-w-[280px]">

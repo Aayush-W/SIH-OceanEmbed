@@ -42,32 +42,6 @@ export interface CycloneHistoricalPreset {
 
 export const HISTORICAL_CYCLONES: CycloneHistoricalPreset[] = [
   {
-    id: 'phailin_2013',
-    name: 'Super Cyclone Phailin',
-    basin: 'Bay of Bengal',
-    year: 2013,
-    category: 'Extremely Severe / Cat 5 Eq.',
-    baseWindKts: 140,
-    baseSpeedKmh: 16.2,
-    baseTrackDistanceKm: 28,
-    baseRmaxKm: 28,
-    basePressureDeficitHpa: 86,
-    recommendedStationId: 'bay_bengal_alpha',
-    description: 'Ground-truth reference storm benchmarked against ocean moored buoy network BD09 & BD10 with validated simulated RMSE vs. observed of 0.6°C.',
-    trackWaypoints: [
-      { hour: -72, lat: 9.8, lon: 93.4, windKts: 40, pressureHpa: 996, category: 'Cyclonic Storm' },
-      { hour: -48, lat: 12.2, lon: 90.8, windKts: 70, pressureHpa: 980, category: 'Very Severe Cyclonic Storm' },
-      { hour: -24, lat: 15.0, lon: 88.0, windKts: 115, pressureHpa: 940, category: 'Extremely Severe Cyclonic Storm' },
-      { hour: -12, lat: 16.8, lon: 86.4, windKts: 135, pressureHpa: 920, category: 'Super Cyclonic Storm' },
-      { hour: 0, lat: 18.6, lon: 85.1, windKts: 140, pressureHpa: 910, category: 'Peak / Landfall Gopalpur' },
-      { hour: 12, lat: 19.9, lon: 84.4, windKts: 100, pressureHpa: 955, category: 'Weakening Inland' },
-      { hour: 24, lat: 21.2, lon: 83.8, windKts: 65, pressureHpa: 980, category: 'Cyclonic Storm' },
-      { hour: 48, lat: 23.4, lon: 83.2, windKts: 35, pressureHpa: 998, category: 'Deep Depression' },
-      { hour: 72, lat: 25.5, lon: 83.0, windKts: 25, pressureHpa: 1004, category: 'Well Marked Low' },
-      { hour: 120, lat: 27.2, lon: 83.2, windKts: 15, pressureHpa: 1008, category: 'Dissipated Remnant' },
-    ],
-  },
-  {
     id: 'amphan_2020',
     name: 'Super Cyclone Amphan',
     basin: 'Bay of Bengal',
@@ -81,7 +55,6 @@ export const HISTORICAL_CYCLONES: CycloneHistoricalPreset[] = [
     recommendedStationId: 'bay_bengal_alpha',
     description: 'One of the strongest storms ever recorded in the Bay of Bengal. Rapidly intensified over an anomalous 31°C ocean warm pool.',
     trackWaypoints: [
-      { hour: -72, lat: 9.0, lon: 86.6, windKts: 25, pressureHpa: 1002, category: 'Low Pressure Area' },
       { hour: -48, lat: 10.4, lon: 86.4, windKts: 35, pressureHpa: 998, category: 'Depression' },
       { hour: -36, lat: 11.6, lon: 86.3, windKts: 55, pressureHpa: 988, category: 'Cyclonic Storm' },
       { hour: -24, lat: 13.2, lon: 86.4, windKts: 90, pressureHpa: 965, category: 'Very Severe Cyclonic Storm' },
@@ -91,8 +64,6 @@ export const HISTORICAL_CYCLONES: CycloneHistoricalPreset[] = [
       { hour: 24, lat: 19.8, lon: 87.8, windKts: 95, pressureHpa: 958, category: 'Very Severe Cyclonic Storm' },
       { hour: 36, lat: 21.7, lon: 88.3, windKts: 75, pressureHpa: 974, category: 'Severe Cyclonic Storm (Landfall)' },
       { hour: 48, lat: 23.9, lon: 89.6, windKts: 35, pressureHpa: 995, category: 'Deep Depression (Inland)' },
-      { hour: 72, lat: 25.8, lon: 91.2, windKts: 25, pressureHpa: 1002, category: 'Remnant Low' },
-      { hour: 120, lat: 27.5, lon: 92.8, windKts: 15, pressureHpa: 1006, category: 'Dissipated' },
     ],
   },
   {
@@ -109,7 +80,6 @@ export const HISTORICAL_CYCLONES: CycloneHistoricalPreset[] = [
     recommendedStationId: 'arabian_sea_basin',
     description: 'Characterized by extremely slow translation speed (<7 km/h) over the central Arabian Sea, driving catastrophic vertical mixing and deep cold wake.',
     trackWaypoints: [
-      { hour: -72, lat: 10.8, lon: 66.2, windKts: 30, pressureHpa: 1002, category: 'Depression' },
       { hour: -48, lat: 12.1, lon: 66.0, windKts: 40, pressureHpa: 996, category: 'Cyclonic Storm' },
       { hour: -36, lat: 13.4, lon: 66.2, windKts: 60, pressureHpa: 986, category: 'Severe Cyclonic Storm' },
       { hour: -24, lat: 14.2, lon: 65.9, windKts: 80, pressureHpa: 972, category: 'Very Severe Cyclonic Storm' },
@@ -119,8 +89,6 @@ export const HISTORICAL_CYCLONES: CycloneHistoricalPreset[] = [
       { hour: 24, lat: 18.5, lon: 67.2, windKts: 80, pressureHpa: 972, category: 'Very Severe Cyclonic Storm' },
       { hour: 36, lat: 20.8, lon: 67.6, windKts: 65, pressureHpa: 982, category: 'Severe Cyclonic Storm' },
       { hour: 48, lat: 23.2, lon: 68.6, windKts: 55, pressureHpa: 988, category: 'Landfall Kutch / Gujarat' },
-      { hour: 72, lat: 25.1, lon: 70.4, windKts: 30, pressureHpa: 998, category: 'Inland Depression' },
-      { hour: 120, lat: 26.8, lon: 73.0, windKts: 15, pressureHpa: 1004, category: 'Dissipated' },
     ],
   },
   {
@@ -207,12 +175,10 @@ export interface CycloneScenarioParams {
   rmaxKm: number;
   pressureDeficitHpa: number;
   durationHours?: number;
-  initialMldM?: number; // Counterfactual initial mixed layer depth
-  physicsMode?: 'FIXED_PHYSICS' | 'LEARNED_MIXING'; // Fixed PWP vs Learned Mixing (PINN Kz)
 }
 
 export interface PWPTimestepData {
-  hour: number; // e.g. -72 to +120
+  hour: number; // e.g. -24 to +48
   distanceKm: number;
   windSpeedKts: number;
   windStressPa: number;
@@ -221,8 +187,6 @@ export interface PWPTimestepData {
   upwellingDisplacementM: number;
   bulkRichardson: number;
   tchpKjCm2: number;
-  uncertaintyC: number; // Dynamic uncertainty envelope: narrow before storm, wide at peak forcing, narrowing in recovery
-  thermoclineDepthM: number;
   profile: { depth: number; temp: number }[];
 }
 
@@ -243,8 +207,6 @@ export interface PWPSimulationSummary {
   deltaMld: number; // e.g. +42m
   deltaTchpPct: number; // e.g. -48%
   upwellingLiftM: number; // e.g. +19.2m
-  physicsMode: 'FIXED_PHYSICS' | 'LEARNED_MIXING';
-  rmseVsObserved: number; // e.g. 1.38°C for Fixed, 0.46°C for Learned Mixing
 
   // Energetics & Mechanics
   peakWindStressPa: number;
@@ -329,8 +291,6 @@ export function runPWPSimulation(
     trackDistanceKm,
     rmaxKm,
     pressureDeficitHpa,
-    initialMldM,
-    physicsMode = 'LEARNED_MIXING',
   } = params;
 
   const lat = stationData.station.lat;
@@ -338,7 +298,6 @@ export function runPWPSimulation(
 
   // 1. Initial State from OceanEmbed
   const baselineSst = stationData.surfaceTemp;
-  const startingMld = initialMldM && initialMldM > 0 ? initialMldM : stationData.mixedLayerDepth;
   const baselineMld = stationData.mixedLayerDepth;
   const baselineProfile = stationData.profile.map((p) => ({ depth: p.depth, temp: p.temp }));
   const baselineTchp = calculateTCHP(baselineProfile);
@@ -354,14 +313,16 @@ export function runPWPSimulation(
   const speedMs = Math.max(1.0, (speedKmh * 1000) / 3600); // m/s
 
   // Residence time over the station water column
+  // Slower cyclone = significantly larger residence time!
   const residenceTimeHours = Math.round(((2 * rmaxKm) / speedKmh) * 10) / 10;
 
-  // Full day-window timeline from T-72h to T+120h (193 hourly timesteps)
-  const hours = Array.from({ length: 193 }, (_, i) => i - 72);
+  // Timestep array from -24h to +48h (every 1 hour = 73 points)
+  const hours = Array.from({ length: 73 }, (_, i) => i - 24);
 
   // Interpolate continuous 1-meter fine depth grid (0 to 500m)
   const fineDepths = Array.from({ length: 501 }, (_, i) => i);
   const initialFineTemps = fineDepths.map((d) => {
+    // Find surrounding profile points
     for (let i = 0; i < baselineProfile.length - 1; i++) {
       const p1 = baselineProfile[i];
       const p2 = baselineProfile[i + 1];
@@ -373,28 +334,12 @@ export function runPWPSimulation(
     return baselineProfile[baselineProfile.length - 1].temp;
   });
 
-  // If initial mixed layer depth was overridden in counterfactual, adjust starting layer
-  if (initialMldM && Math.abs(initialMldM - baselineMld) > 2) {
-    const overrideMldInt = Math.min(200, Math.round(initialMldM));
-    let tSum = 0;
-    for (let z = 0; z <= overrideMldInt; z++) {
-      tSum += initialFineTemps[z];
-    }
-    const tAvg = tSum / (overrideMldInt + 1);
-    for (let z = 0; z <= overrideMldInt; z++) {
-      initialFineTemps[z] = tAvg;
-    }
-  }
-
   // State arrays for simulation
   let currentFineTemps = [...initialFineTemps];
-  let currentMld = startingMld;
+  let currentMld = baselineMld;
   let cumulativeUpwellingM = 0;
   let totalWorkJoules = 0;
   let peakStressPa = 0;
-
-  const isLearnedMixing = physicsMode === 'LEARNED_MIXING';
-  const rmseVsObserved = isLearnedMixing ? 0.46 : 1.38;
 
   const timesteps: PWPTimestepData[] = [];
 
@@ -416,7 +361,7 @@ export function runPWPSimulation(
       localWindMs = maxWindMs * Math.pow(rRatio, -0.55);
     }
 
-    // Add background ambient wind (approx 7 m/s)
+    // Add background ambient wind (approx 8 m/s)
     localWindMs = Math.max(6.0, localWindMs);
     const localWindKts = localWindMs / 0.514444;
 
@@ -434,7 +379,9 @@ export function runPWPSimulation(
 
     // PWP Mixed Layer Entrainment:
     // When winds are active (especially near t=0), shear at base of MLD exceeds critical Ri_b (0.65).
-    // In Learned Mixing (AI PINN), dynamic vertical eddy diffusivity Kz(z,t) dampens over-mixing
+    // Entrainment velocity w_e = dh/dt.
+    // Classical Kato-Phillips / Price formulation:
+    // dh/dt = 2.5 * uStar^3 / (g * alpha * (T_mld - T_sub) * h)
     if (tau > 0.15) {
       const g = 9.81;
       const alphaThermal = 2.8e-4; // 1/K for warm tropical seawater
@@ -442,9 +389,8 @@ export function runPWPSimulation(
       const deltaT = Math.max(0.15, currentFineTemps[0] - currentFineTemps[subIdx]);
       const buoyancyFreq = Math.max(1e-4, g * alphaThermal * deltaT);
 
-      // Entrainment rate in m/s (AI Learned Mixing applies neural stratification correction factor)
-      const mixingFactor = isLearnedMixing ? 1.15 : 1.45;
-      const we = (mixingFactor * Math.pow(uStar, 3)) / (buoyancyFreq * Math.max(15, currentMld));
+      // Entrainment rate in m/s
+      const we = (1.4 * Math.pow(uStar, 3)) / (buoyancyFreq * Math.max(15, currentMld));
       const entrainmentStepM = we * 3600;
 
       const newMld = Math.min(220, currentMld + entrainmentStepM);
@@ -457,8 +403,8 @@ export function runPWPSimulation(
       }
       const mixedTemp = heatSum / (mldInt + 1);
 
-      // Surface heat flux extraction (sensible + latent heat loss)
-      const enthalpyLossFlux = (localWindMs / maxWindMs) * (isLearnedMixing ? 0.012 : 0.016);
+      // Small surface heat flux extraction to atmosphere (sensible + latent heat loss)
+      const enthalpyLossFlux = (localWindMs / maxWindMs) * 0.015; // °C per hour
       const finalMixedTemp = mixedTemp - enthalpyLossFlux;
 
       for (let z = 0; z <= mldInt; z++) {
@@ -468,6 +414,8 @@ export function runPWPSimulation(
     }
 
     // Ekman Pumping & Upwelling Suction:
+    // Cyclonic wind curl in Northern Hemisphere drives divergent Ekman transport,
+    // causing vertical suction w_E = curl(tau) / (rho_0 * f)
     if (distKm <= rmaxKm * 2.2) {
       const curlTau = (2.0 * tau) / Math.max(15000, rmaxKm * 1000);
       const wUpwelling = curlTau / (rho0 * fCoriolis);
@@ -483,10 +431,6 @@ export function runPWPSimulation(
         }
       }
     }
-
-    // Dynamic uncertainty envelope: narrow before storm (±0.25°C), widening during peak forcing (±1.45°C), narrowing in recovery (±0.38°C)
-    const uncertaintyC = Math.round((0.25 + 1.20 * Math.exp(-Math.pow(h / 28, 2))) * 100) / 100;
-    const thermoclineDepthM = Math.round((currentMld + 18 + cumulativeUpwellingM * 0.2) * 10) / 10;
 
     // Bulk Richardson Number estimate
     const currentDeltaT = Math.max(0.1, currentFineTemps[0] - currentFineTemps[Math.min(500, Math.round(currentMld + 10))]);
@@ -508,8 +452,6 @@ export function runPWPSimulation(
       upwellingDisplacementM: Math.round(cumulativeUpwellingM * 10) / 10,
       bulkRichardson: Math.round(bulkRi * 100) / 100,
       tchpKjCm2: calculateTCHP(sampledProfile),
-      uncertaintyC,
-      thermoclineDepthM,
       profile: sampledProfile,
     });
   }
@@ -581,8 +523,6 @@ export function runPWPSimulation(
     deltaMld,
     deltaTchpPct,
     upwellingLiftM: Math.round(cumulativeUpwellingM * 10) / 10,
-    physicsMode,
-    rmseVsObserved,
 
     peakWindStressPa: Math.round(peakStressPa * 100) / 100,
     totalWorkMjM2,

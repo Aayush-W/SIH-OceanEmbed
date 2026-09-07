@@ -9,6 +9,17 @@
     --text-muted: #6E8391;
     --temp-cyan: #3FE0C7;
     --temp-coral: #FF8A5B;
+    --glass-surface: rgba(12, 26, 36, 0.58);
+    --glass-surface-strong: rgba(8, 19, 29, 0.82);
+    --glass-border: rgba(186, 232, 238, 0.22);
+    --glass-highlight: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 18px 48px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(5, 170, 190, 0.06);
+    --control-radius: 8px;
+    --space-panel: 16px;
+    --space-section: 24px;
+    --text-label: 0.625rem;
+    --text-value: 0.875rem;
+    --ease-ui: 160ms ease;
   }
 
   body {
@@ -21,6 +32,10 @@
     user-select: none;
     -webkit-font-smoothing: antialiased;
   }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 }
 
 .font-space {
@@ -29,6 +44,249 @@
 
 .font-data {
   font-family: 'JetBrains Mono', monospace;
+}
+
+/* Shared liquid-glass language for the tactical UI. */
+.glass-surface,
+.glass-control,
+.glass-nav,
+.glass-timeline {
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(184, 248, 255, 0.12), transparent 38%),
+    linear-gradient(135deg, rgba(25, 52, 64, 0.74), rgba(7, 15, 24, 0.66));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: var(--control-radius);
+}
+
+button {
+  min-height: 32px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 rgba(1, 10, 16, 0.34);
+  -webkit-backdrop-filter: blur(12px) saturate(145%);
+  backdrop-filter: blur(12px) saturate(145%);
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease,
+    box-shadow 160ms ease, transform 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(174, 239, 243, 0.08);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(63, 224, 199, 0.7);
+  outline-offset: 2px;
+}
+
+/* Keep the square utility-driven controls consistent with the rest of the UI. */
+button[class*="rounded-none"],
+button[class*="rounded-lg"],
+button[class*="rounded-md"] {
+  border-radius: var(--control-radius);
+}
+
+.app-shell {
+  background:
+    radial-gradient(circle at 72% 18%, rgba(35, 104, 111, 0.12), transparent 34%),
+    #05080d;
+}
+
+.glass-nav {
+  background:
+    radial-gradient(ellipse at 0% 12%, rgba(63, 224, 199, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(11, 27, 38, 0.9), rgba(4, 11, 18, 0.82));
+  border-color: rgba(63, 224, 199, 0.16);
+  box-shadow: 12px 0 34px rgba(0, 0, 0, 0.18), inset -1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.glass-timeline {
+  background:
+    radial-gradient(ellipse at 48% 0%, rgba(63, 224, 199, 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(14, 32, 43, 0.88), rgba(5, 12, 20, 0.9));
+  border-color: rgba(63, 224, 199, 0.18);
+  box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Floating HUD panels should read as one aligned system across every screen. */
+[class*="backdrop-blur"],
+[class*="bg-[#0A1119]"] {
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(185, 246, 255, 0.1), transparent 35%),
+    radial-gradient(ellipse at 100% 100%, rgba(63, 224, 199, 0.045), transparent 38%),
+    linear-gradient(135deg, rgba(24, 49, 62, 0.72), rgba(6, 15, 24, 0.68));
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+  border-radius: var(--control-radius);
+}
+
+/* Panel rhythm: dense data stays compact, while each panel gets a clear edge. */
+[class*="bg-[#0A1119]"],
+[class*="backdrop-blur"] {
+  isolation: isolate;
+}
+
+/* Reusable liquid-glass surface for prominent cards and hero sections. */
+.liquid-glass {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(193, 240, 245, 0.26) !important;
+  background:
+    radial-gradient(circle at 9% -18%, rgba(205, 255, 255, 0.2), transparent 35%),
+    radial-gradient(circle at 96% 110%, rgba(63, 224, 199, 0.1), transparent 42%),
+    linear-gradient(135deg, rgba(31, 64, 77, 0.68), rgba(5, 15, 24, 0.7)) !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.32),
+    0 2px 14px rgba(41, 202, 221, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28);
+  -webkit-backdrop-filter: blur(24px) saturate(155%);
+  backdrop-filter: blur(24px) saturate(155%);
+}
+
+.liquid-glass::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0.12), transparent 18% 70%, rgba(255, 255, 255, 0.035));
+  opacity: 0.72;
+}
+
+.liquid-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+.liquid-glass-hero {
+  border-radius: 14px;
+}
+
+#bottom-timeline-bar {
+  min-height: 64px;
+}
+
+#timeline-slider {
+  height: 6px;
+  border-radius: 999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #05080d;
+  border-radius: 999px;
+  background: var(--temp-cyan);
+  box-shadow: 0 0 0 2px rgba(63, 224, 199, 0.24);
+  appearance: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #05080d;
+  border-radius: 999px;
+  background: var(--temp-cyan);
+  box-shadow: 0 0 0 2px rgba(63, 224, 199, 0.24);
+}
+
+/* Make active navigation and selected data controls read immediately. */
+aside.glass-nav button[id^="nav-"] {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-left-width: 2px;
+}
+
+aside.glass-nav button[id^="nav-"]:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(63, 224, 199, 0.2);
+}
+
+aside.glass-nav button[id^="layer-selector-"] {
+  min-height: 30px;
+}
+
+@media (max-width: 1100px) {
+  #bottom-timeline-bar > div:first-child {
+    min-width: 220px;
+  }
+
+  #bottom-timeline-bar > div:last-child {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell > .flex-1 {
+    padding-left: 3.5rem;
+  }
+
+  #bottom-timeline-bar {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  #bottom-timeline-bar > div:first-child,
+  #bottom-timeline-bar > div:last-child {
+    min-width: auto;
+  }
+
+  #bottom-timeline-bar > div:nth-child(2) {
+    min-width: 180px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell > .flex-1 {
+    padding-left: 3.5rem !important;
+  }
+
+  #bottom-timeline-bar {
+    height: 72px;
+    align-items: stretch;
+  }
+
+  #bottom-timeline-bar > div:first-child {
+    gap: 0.4rem;
+  }
+
+  #bottom-timeline-bar > div:first-child > div:last-child {
+    display: none;
+  }
+
+  #bottom-timeline-bar > div:nth-child(2) {
+    min-width: 0;
+  }
+
+  #bottom-timeline-bar > div:nth-child(2) button {
+    font-size: 0.5rem;
+  }
+
+  #bottom-timeline-bar > div:last-child {
+    gap: 0.35rem;
+  }
 }
 
 /* Technical Grid Overlay */
@@ -85,4 +343,485 @@
 
 .temp-gradient {
   background: linear-gradient(90deg, #3FE0C7 0%, #76d0bc 25%, #d1ae7d 50%, #fbad7e 75%, #FF8A5B 100%);
+}
+
+/* Simulator layout: keep controls and the five-step flow inside the page frame. */
+.simulator-workspace {
+  scrollbar-gutter: stable;
+}
+
+.simulator-actions {
+  flex-shrink: 0;
+}
+
+.simulator-tabs {
+  min-width: 0;
+}
+
+.simulation-pipeline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.pipeline-step {
+  min-width: 0;
+}
+
+.pipeline-step > div:last-child {
+  min-width: 0;
+}
+
+.pipeline-step > div:last-child > div {
+  overflow-wrap: anywhere;
+}
+
+.pipeline-arrow {
+  flex: 0 0 auto;
+}
+
+/* Cyclone digital-twin hero */
+.cyclone-twin-hero {
+  margin-bottom: 20px;
+  padding: 18px;
+  border: 1px solid rgba(255, 138, 91, 0.28);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(23, 32, 38, 0.92), rgba(5, 10, 16, 0.88));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.cyclone-twin-hero-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.cyclone-twin-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #ff8a5b;
+  font: 600 10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cyclone-twin-hero h2 {
+  margin: 5px 0 4px;
+  color: #e8edf0;
+  font: 700 clamp(1.1rem, 2vw, 1.55rem)/1.15 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.cyclone-twin-hero p {
+  max-width: 680px;
+  margin: 0;
+  color: #8ca0ab;
+  font: 400 11px/1.5 'Space Grotesk', sans-serif;
+}
+
+.cyclone-twin-view-switcher {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(151, 190, 201, 0.22);
+  border-radius: 8px;
+  background: rgba(5, 8, 13, 0.7);
+}
+
+.cyclone-twin-view-switcher button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  color: #6e8391;
+  background: transparent;
+  font: 700 10px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+.cyclone-twin-view-switcher button:hover,
+.cyclone-twin-view-switcher button.is-active {
+  border-color: rgba(255, 138, 91, 0.58);
+  color: #ffb188;
+  background: rgba(255, 138, 91, 0.14);
+}
+
+.cyclone-twin-stage {
+  position: relative;
+  display: grid;
+  min-height: 390px;
+  overflow: hidden;
+  border: 1px solid rgba(110, 180, 190, 0.24);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(101, 202, 215, 0.12), transparent 42%),
+    rgba(4, 14, 23, 0.8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 0 48px rgba(2, 8, 15, 0.4);
+}
+
+.cyclone-twin-stage.is-split {
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+}
+
+.cyclone-twin-stage.is-2d,
+.cyclone-twin-stage.is-3d {
+  grid-template-columns: 1fr;
+}
+
+.cyclone-twin-map,
+.cyclone-twin-leaflet-map,
+.cyclone-twin-globe {
+  position: relative;
+  min-width: 0;
+  min-height: 390px;
+  overflow: hidden;
+}
+
+.cyclone-twin-leaflet-map {
+  min-height: 390px;
+  overflow: hidden;
+  background: #071019;
+}
+
+.cyclone-twin-leaflet-map > .relative {
+  height: 100%;
+  min-height: 390px;
+}
+
+/* The hero owns the controls; the reusable full-screen map keeps its own HUD. */
+.cyclone-twin-leaflet-map > .relative > .absolute {
+  display: none;
+}
+
+.cyclone-twin-leaflet-map > .relative > div[class*="border-t"] {
+  display: none;
+}
+
+.cyclone-twin-leaflet-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  background: #071019;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* The real map remains geographic; weather layers use restrained white/steel tones. */
+.cyclone-twin-leaflet-map .leaflet-overlay-pane path {
+  stroke: rgba(240, 245, 243, 0.78) !important;
+  fill: rgba(207, 222, 224, 0.08) !important;
+  filter: drop-shadow(0 0 2px rgba(236, 244, 243, 0.22));
+}
+
+.cyclone-twin-leaflet-map .leaflet-overlay-pane path[fill-opacity] {
+  fill: rgba(177, 204, 208, 0.13) !important;
+}
+
+.cyclone-twin-leaflet-map .cyclone-eye-icon,
+.cyclone-twin-leaflet-map .station-marker-icon,
+.cyclone-twin-leaflet-map .distance-label-icon {
+  filter: grayscale(1) brightness(1.55) contrast(0.9);
+}
+
+.cyclone-twin-leaflet-map .leaflet-control-zoom a {
+  color: #e8edf0;
+  background: rgba(8, 15, 21, 0.86);
+  border-color: rgba(206, 222, 224, 0.24);
+}
+
+.cyclone-twin-globe {
+  background: radial-gradient(circle at 50% 48%, rgba(34, 105, 122, 0.24), transparent 52%), #040b12;
+}
+
+.cyclone-globe-zoom-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 6;
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid rgba(206, 222, 224, 0.24);
+  border-radius: 7px;
+  background: rgba(7, 13, 19, 0.78);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.cyclone-model-attribution {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 6;
+  color: rgba(232, 237, 240, 0.62);
+  font: 8px 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cyclone-globe-zoom-controls button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(206, 222, 224, 0.18);
+  color: #dfe8e9;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cyclone-globe-zoom-controls button:hover {
+  border-color: rgba(255, 255, 255, 0.54);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.cyclone-twin-stage.is-split .cyclone-twin-globe {
+  border-left: 1px solid rgba(110, 180, 190, 0.22);
+}
+
+.cyclone-map-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  display: block;
+}
+
+.twin-track {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.twin-track-baseline {
+  stroke: #557386;
+  stroke-width: 0.6;
+  stroke-dasharray: 1.2 1.6;
+  opacity: 0.72;
+}
+
+.twin-track-counterfactual {
+  stroke: #ff8a5b;
+  stroke-width: 1.1;
+  filter: drop-shadow(0 0 3px rgba(255, 138, 91, 0.42));
+  stroke-dasharray: 5 1.5;
+  animation: twinTrackFlow 7s linear infinite;
+}
+
+.twin-wake {
+  fill: #0099d0;
+  stroke: #00d9ff;
+  stroke-width: 0.35;
+  opacity: 0.18;
+  animation: twinWakePulse 3.5s ease-in-out infinite;
+}
+
+.twin-wake-core {
+  fill: #00d9ff;
+  opacity: 0.28;
+}
+
+.twin-station-link {
+  stroke: #3fe0c7;
+  stroke-width: 0.35;
+  stroke-dasharray: 1 1.5;
+  opacity: 0.75;
+}
+
+.twin-station {
+  fill: #3fe0c7;
+  stroke: #d9fff7;
+  stroke-width: 0.45;
+  filter: drop-shadow(0 0 3px rgba(63, 224, 199, 0.8));
+}
+
+.twin-wind-ring {
+  fill: none;
+  stroke: #ff8a5b;
+  transform-origin: center;
+  animation: twinRingPulse 2.4s ease-in-out infinite;
+}
+
+.twin-wind-ring-outer {
+  stroke-width: 0.45;
+  stroke-dasharray: 1 1.2;
+  opacity: 0.72;
+}
+
+.twin-wind-ring-inner {
+  stroke: #ffb188;
+  stroke-width: 0.7;
+  stroke-dasharray: 2 0.8;
+  opacity: 0.9;
+  animation-delay: -0.8s;
+}
+
+.twin-eyewall {
+  fill: rgba(255, 59, 48, 0.22);
+  stroke: #ff3b30;
+  stroke-width: 0.8;
+  filter: drop-shadow(0 0 4px rgba(255, 59, 48, 0.9));
+}
+
+.twin-eye {
+  fill: #ff3b30;
+}
+
+.twin-spiral {
+  fill: none;
+  stroke: #ffb188;
+  stroke-width: 0.75;
+  stroke-linecap: round;
+  opacity: 0.85;
+  transform-origin: center;
+  animation: twinSpiral 2.6s linear infinite;
+}
+
+.twin-spiral-b { animation-delay: -1.3s; }
+
+.twin-map-label {
+  fill: #ffb188;
+  font: 700 2.8px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+.twin-map-label-muted { fill: #3fe0c7; }
+
+.twin-map-coordinates,
+.twin-map-scale {
+  position: absolute;
+  z-index: 2;
+  color: #8ca0ab;
+  font: 9px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.twin-map-coordinates { left: 14px; bottom: 12px; }
+
+.twin-map-scale {
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.twin-map-scale i {
+  display: block;
+  width: 60px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffb188, #3fe0c7, #00d9ff);
+}
+
+.cyclone-twin-overlay {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(151, 190, 201, 0.2);
+  border-radius: 7px;
+  background: rgba(5, 12, 18, 0.76);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: #a9bac2;
+  font: 10px 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+}
+
+.cyclone-twin-overlay span,
+.cyclone-twin-overlay b {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.cyclone-twin-overlay b { color: #e8edf0; }
+.cyclone-twin-overlay-top { top: 12px; left: 12px; }
+.cyclone-twin-overlay-bottom { right: 12px; bottom: 12px; }
+.twin-status-dot { width: 6px; height: 6px; border-radius: 999px; background: #ff8a5b; box-shadow: 0 0 8px #ff8a5b; }
+
+.cyclone-twin-controls {
+  display: grid;
+  grid-template-columns: auto minmax(170px, 1fr);
+  align-items: center;
+  gap: 12px 16px;
+  padding: 12px 2px 0;
+}
+
+.cyclone-twin-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 138, 91, 0.58);
+  color: #ffb188;
+  background: rgba(255, 138, 91, 0.12);
+  font: 700 10px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+.cyclone-twin-play:hover { background: rgba(255, 138, 91, 0.22); }
+
+.cyclone-twin-time-label {
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  color: #6e8391;
+  font: 9px 'JetBrains Mono', monospace;
+}
+
+.cyclone-twin-time-label strong { color: #ffb188; }
+.cyclone-twin-controls input { grid-column: 2; width: 100%; accent-color: #ff8a5b; }
+
+@keyframes twinTrackFlow { to { stroke-dashoffset: -20; } }
+@keyframes twinWakePulse { 0%, 100% { opacity: 0.18; } 50% { opacity: 0.3; } }
+@keyframes twinRingPulse { 0%, 100% { transform: scale(0.96); opacity: 0.65; } 50% { transform: scale(1.04); opacity: 1; } }
+@keyframes twinSpiral { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .simulator-actions { width: 100%; }
+  .simulator-tabs { width: calc(100% - 42px); overflow-x: auto; scrollbar-width: thin; }
+  .simulator-tabs button { flex: 0 0 auto; }
+  .simulation-pipeline { grid-template-columns: repeat(5, minmax(130px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+  .pipeline-arrow { display: none; }
+  .cyclone-twin-stage.is-split { grid-template-columns: 1fr; }
+  .cyclone-twin-stage.is-split .cyclone-twin-globe { min-height: 260px; border-top: 1px solid rgba(110, 180, 190, 0.22); border-left: 0; }
+  .cyclone-twin-stage.is-split .cyclone-twin-map,
+  .cyclone-twin-stage.is-split .cyclone-twin-leaflet-map,
+  .cyclone-twin-stage.is-split .cyclone-twin-globe { min-height: 320px; }
+}
+
+@media (max-width: 640px) {
+  .simulator-workspace { padding-inline: 12px; }
+  .simulation-pipeline-shell { padding: 10px; }
+  .simulation-pipeline { grid-template-columns: repeat(5, minmax(145px, 1fr)); }
+  .cyclone-twin-hero { padding: 12px; }
+  .cyclone-twin-hero-header { flex-direction: column; }
+  .cyclone-twin-view-switcher { width: 100%; }
+  .cyclone-twin-view-switcher button { flex: 1; justify-content: center; }
+  .cyclone-twin-stage,
+  .cyclone-twin-map,
+  .cyclone-twin-leaflet-map,
+  .cyclone-twin-globe,
+  .cyclone-map-svg { min-height: 300px; }
+  .cyclone-twin-overlay { gap: 7px; padding: 6px 7px; font-size: 8px; }
+  .cyclone-twin-overlay-bottom { left: 12px; right: auto; bottom: 38px; }
+  .cyclone-twin-overlay-top span:nth-child(3) { display: none; }
+  .cyclone-twin-controls { grid-template-columns: 1fr; }
+  .cyclone-twin-time-label,
+  .cyclone-twin-controls input { grid-column: 1; }
 }
