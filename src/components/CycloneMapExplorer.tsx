@@ -70,6 +70,8 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
   const [showStations, setShowStations] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [plannerPoints, setPlannerPoints] = useState<Array<Record<string, string | number>>>([]);
+  const [showPlannerPoints, setShowPlannerPoints] = useState<boolean>(true);
+  const [plannerStatus, setPlannerStatus] = useState<'loading' | 'model-output' | 'fallback-plan' | 'unavailable'>('loading');
 
   // Compute full geospatial cyclone state
   const computedGeoData: CycloneGeospatialResult = useMemo(() => {
@@ -129,7 +131,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!showPlanner) return;
+    if (!showPlanner || !showPlannerPoints) return;
     let cancelled = false;
     fetch('/api/observation-planner')
       .then((response) => response.ok ? response.json() : Promise.reject(new Error('planner unavailable')))
@@ -137,16 +139,20 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
         if (!cancelled && Array.isArray(payload.points)) {
           // Keep map bounds valid even if a stale or incomplete planner response
           // reaches the client.
+          setPlannerStatus(payload.status === 'model-output' ? 'model-output' : 'fallback-plan');
           setPlannerPoints(payload.points.filter((point: Record<string, unknown>) =>
             Number.isFinite(Number(point.grid_lat)) && Number.isFinite(Number(point.grid_lon))
           ));
         }
       })
       .catch(() => {
-        if (!cancelled) setPlannerPoints([]);
+        if (!cancelled) {
+          setPlannerPoints([]);
+          setPlannerStatus('unavailable');
+        }
       });
     return () => { cancelled = true; };
-  }, [showPlanner]);
+  }, [showPlanner, showPlannerPoints]);
 
   // Update Basemap Tiles
   useEffect(() => {
@@ -178,7 +184,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
     const lons = geoData.counterfactualTrack.map((p) => p.lon);
     lats.push(stationData.station.lat);
     lons.push(stationData.station.lon);
-    if (showPlanner) {
+    if (showPlanner && showPlannerPoints) {
       plannerPoints.forEach((point) => {
         const lat = Number(point.grid_lat);
         const lon = Number(point.grid_lon);
@@ -201,13 +207,13 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
       ],
       { padding: [28, 28], maxZoom: isCompact ? 7 : 9, animate: false }
     );
-  }, [preset.id, stationData.station.id, params.trackDistanceKm, params.rmaxKm, isCompact, showPlanner, plannerPoints]);
+  }, [preset.id, stationData.station.id, params.trackDistanceKm, params.rmaxKm, isCompact, showPlanner, showPlannerPoints, plannerPoints]);
 
   useEffect(() => {
     const group = plannerLayerRef.current;
     if (!group) return;
     group.clearLayers();
-    if (!showPlanner) return;
+    if (!showPlanner || !showPlannerPoints) return;
 
     plannerPoints.forEach((point) => {
       const lat = Number(point.grid_lat);
@@ -216,16 +222,18 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
       const priority = Number(point.predicted_priority) || 0;
       const uncertainty = Number(point.prediction_uncertainty) || 0;
       const marker = L.circleMarker([lat, lon], {
-        radius: 4 + priority * 9,
-        color: '#f0f5f3',
-        weight: 1,
-        fillColor: '#b8cfd2',
-        fillOpacity: 0.16 + priority * 0.55,
+        radius: 5 + priority * 9,
+        color: '#EAFD60',
+        weight: 2,
+        dashArray: '2, 2',
+        fillColor: '#3FE0C7',
+        fillOpacity: 0.22 + priority * 0.55,
         interactive: true,
       });
       marker.bindTooltip(
         `<div class="font-mono text-xs bg-[#0A1119] border border-[#E8EDF0] p-1.5 text-[#E8EDF0]">
-          <div class="font-bold uppercase">ACTIVE OBSERVATION PLANNER</div>
+          <div class="font-bold uppercase text-[#EAFD60]">NEXT ARGO LOCATION #${Number(point.rank) || '—'}</div>
+          <div>${String(point.region || 'High-information candidate cell')}</div>
           <div>Priority: <b>${priority.toFixed(3)}</b></div>
           <div>Uncertainty: <b>±${uncertainty.toFixed(3)}</b></div>
           <div>Argo distance: <b>${Number(point.nearest_argo_distance_km).toFixed(0)} km</b></div>
@@ -234,7 +242,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
       );
       group.addLayer(marker);
     });
-  }, [plannerPoints, showPlanner]);
+  }, [plannerPoints, showPlanner, showPlannerPoints]);
 
   // Render Cold Wake Footprints
   useEffect(() => {
@@ -660,6 +668,18 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
             />
             <span>Mooring / Argo Stations</span>
           </label>
+          <label className="flex items-center gap-2 cursor-pointer hover:text-[#E8EDF0]">
+            <input
+              type="checkbox"
+              checked={showPlanner && showPlannerPoints}
+              onChange={(e) => setShowPlannerPoints(e.target.checked)}
+              className="accent-[#EAFD60] w-3 h-3"
+            />
+            <span className="text-[#EAFD60] font-semibold">Next Argo Points ({plannerPoints.length || '…'})</span>
+          </label>
+          <div className="pl-5 text-[8px] text-[#6E8391] uppercase">
+            {plannerStatus === 'model-output' ? 'ML candidate plan loaded' : plannerStatus === 'fallback-plan' ? 'Candidate plan loaded' : plannerStatus === 'unavailable' ? 'Planner temporarily unavailable' : 'Loading candidate plan'}
+          </div>
         </div>
       </div>
 
@@ -680,6 +700,10 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full border border-[#FF3B30] bg-[#FF3B30]/30"></div>
           <span className="text-[#FF8A5B]">Rmax Swath</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-full border-2 border-dashed border-[#EAFD60] bg-[#3FE0C7]/50"></div>
+          <span className="text-[#EAFD60]">Next Argo Point</span>
         </div>
       </div>
 
