@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <filter id="cloud-noise" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.055" numOctaves="4" seed="19" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="mono"/>
+      <feComponentTransfer in="mono" result="soft-noise">
+        <feFuncA type="table" tableValues="0 0.18 0.52 0.86"/>
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <radialGradient id="cloud-core">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.92"/>
+      <stop offset="0.48" stop-color="#e7eff0" stop-opacity="0.54"/>
+      <stop offset="1" stop-color="#c3d5d8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soften">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <g filter="url(#soften)" opacity="0.92">
+    <ellipse cx="256" cy="256" rx="155" ry="92" fill="url(#cloud-core)" transform="rotate(-18 256 256)"/>
+    <ellipse cx="264" cy="249" rx="96" ry="52" fill="url(#cloud-core)" transform="rotate(38 264 249)"/>
+    <ellipse cx="190" cy="315" rx="74" ry="42" fill="url(#cloud-core)" transform="rotate(-42 190 315)"/>
+    <ellipse cx="335" cy="190" rx="78" ry="38" fill="url(#cloud-core)" transform="rotate(-28 335 190)"/>
+  </g>
+  <rect width="512" height="512" filter="url(#cloud-noise)" opacity="0.8"/>
+  <circle cx="256" cy="256" r="42" fill="#06101a" opacity="0.9"/>
+  <circle cx="256" cy="256" r="51" fill="none" stroke="#f6fbfa" stroke-opacity="0.42" stroke-width="7"/>
+</svg>

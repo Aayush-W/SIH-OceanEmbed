@@ -1,0 +1,10 @@
+{
+  "name": "Remix of D OceanEmbed",
+  "description": "Subsurface ocean thermal reconstruction and monitoring console for the North Indian Ocean.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
