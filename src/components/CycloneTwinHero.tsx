@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -114,6 +114,7 @@ const Twin2DMap: React.FC<{ geoData: CycloneGeospatialResult; selectedHour: numb
 
 const Twin3DGlobe: React.FC<{ geoData: CycloneGeospatialResult; selectedHour: number }> = ({ geoData, selectedHour }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [webglUnavailable, setWebglUnavailable] = useState(false);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const stormRef = useRef<THREE.Group | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
@@ -124,13 +125,20 @@ const Twin3DGlobe: React.FC<{ geoData: CycloneGeospatialResult; selectedHour: nu
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || webglUnavailable) return;
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     const camera = new THREE.PerspectiveCamera(38, container.clientWidth / Math.max(1, container.clientHeight), 0.1, 100);
     camera.position.set(0, 0.45, 5.6);
     cameraRef.current = camera;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (error) {
+      console.warn('Cyclone Twin 3D view is unavailable:', error);
+      setWebglUnavailable(true);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
@@ -340,7 +348,7 @@ const Twin3DGlobe: React.FC<{ geoData: CycloneGeospatialResult; selectedHour: nu
       wakeRef.current = null;
       modelRef.current = null;
     };
-  }, [trackKey]);
+  }, [trackKey, webglUnavailable]);
 
   useEffect(() => {
     if (!stormRef.current) return;
@@ -379,6 +387,16 @@ const Twin3DGlobe: React.FC<{ geoData: CycloneGeospatialResult; selectedHour: nu
     }
   }, [geoData.activeEye]);
 
+  if (webglUnavailable) {
+    return (
+      <div className="cyclone-twin-globe cyclone-twin-globe-fallback" role="status">
+        <Globe2 className="w-8 h-8" />
+        <span>3D view is unavailable on this device.</span>
+        <small>Use the 2D map to explore the cyclone track and ocean response.</small>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="cyclone-twin-globe" aria-label="Interactive 3D cyclone globe">
       <div className="cyclone-model-attribution">CLOUD MESH: HURRICANE MARIA · MODIS · CC0</div>
@@ -408,7 +426,7 @@ export const CycloneTwinHero: React.FC<CycloneTwinHeroProps> = ({
   const status = simulation.feedbackType === 'STRONG_NEGATIVE' ? 'SELF-INDUCED WEAKENING' : simulation.feedbackType === 'MODERATE_NEGATIVE' ? 'OCEAN FEEDBACK ACTIVE' : 'INTENSIFICATION SUPPORTED';
 
   return (
-    <section className="cyclone-twin-hero liquid-glass liquid-glass-hero" aria-label="Cyclone digital twin">
+    <section className="cyclone-twin-hero liquid-glass liquid-glass-hero" aria-label="Cyclone digital twin" style={{ minHeight: 0 }}>
       <div className="cyclone-twin-hero-header">
         <div>
           <div className="cyclone-twin-kicker"><Radio className="w-3.5 h-3.5" /> LIVE DIGITAL TWIN // {preset.name.toUpperCase()}</div>
@@ -424,9 +442,15 @@ export const CycloneTwinHero: React.FC<CycloneTwinHeroProps> = ({
         </div>
       </div>
 
-      <div className={`cyclone-twin-stage is-${viewMode.toLowerCase()}`}>
+      <div
+        className={`cyclone-twin-stage is-${viewMode.toLowerCase()}`}
+        style={{
+          minHeight: 390,
+          gridTemplateColumns: viewMode === 'SPLIT' ? 'minmax(0, 1.35fr) minmax(300px, 0.65fr)' : 'minmax(0, 1fr)',
+        }}
+      >
         {(viewMode === '2D' || viewMode === 'SPLIT') && (
-          <div className="cyclone-twin-leaflet-map">
+          <div className="cyclone-twin-leaflet-map" style={{ minHeight: 390 }}>
             <CycloneMapExplorer
               preset={preset}
               params={params}

@@ -167,6 +167,7 @@ export const CycloneSimulatorView: React.FC<CycloneSimulatorViewProps> = ({
   const [isPlayingPassage, setIsPlayingPassage] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'SIMULATION' | 'SPATIAL_MAP' | 'HOVMOLLER' | 'PWP_PHYSICS'>('SIMULATION');
   const [simViewMode, setSimViewMode] = useState<'PROFILE' | 'MAP' | 'SPLIT'>('PROFILE');
+  // The map remains usable if a device cannot create the optional WebGL globe.
   const [twinViewMode, setTwinViewMode] = useState<'2D' | '3D' | 'SPLIT'>('SPLIT');
   const [hoverDepth, setHoverDepth] = useState<number | null>(null);
 
@@ -321,7 +322,7 @@ Explain whether the self-induced cold wake throttles the cyclone or if the storm
   }, [counterfactualSim, baselineSim, currentStep]);
 
   return (
-    <div id="cyclone-simulator-screen" className="simulator-workspace relative w-full h-full bg-[#05080D] select-none overflow-y-auto p-4 pb-24 sm:p-6 sm:pb-24 flex flex-col font-space">
+    <div id="cyclone-simulator-screen" className="simulator-workspace relative w-full h-full bg-[#05080D] select-none overflow-y-auto p-4 pb-24 sm:p-6 sm:pb-24 font-space">
       {/* 1. Header & Conceptual Pipeline Banner */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#1C2A33] mb-5">
         <div>

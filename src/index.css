@@ -539,6 +539,29 @@ aside.glass-nav button[id^="layer-selector-"] {
   background: radial-gradient(circle at 50% 48%, rgba(34, 105, 122, 0.24), transparent 52%), #040b12;
 }
 
+.cyclone-twin-globe-fallback {
+  display: flex;
+  min-height: 390px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: #e8edf0;
+  text-align: center;
+  font: 600 12px/1.4 'JetBrains Mono', monospace;
+}
+
+.cyclone-twin-globe-fallback svg {
+  color: #ffb188;
+}
+
+.cyclone-twin-globe-fallback small {
+  max-width: 260px;
+  color: #8ca0ab;
+  font: 400 10px/1.45 'Space Grotesk', sans-serif;
+}
+
 .cyclone-globe-zoom-controls {
   position: absolute;
   right: 12px;

@@ -19,6 +19,12 @@ app.get('/api/observation-planner', (_req, res) => {
     const source = fs.readFileSync(plannerPath, 'utf8').trim();
     const [headerLine, ...rows] = source.split(/\r?\n/);
     const headers = headerLine.split(',');
+    // A clone without Git LFS content contains a small pointer file here. Do not
+    // parse it as planner data: it has no geographic columns and would produce
+    // invalid Leaflet coordinates in the client.
+    if (!headers.includes('grid_lat') || !headers.includes('grid_lon')) {
+      throw new Error('Observation planner CSV has not been downloaded from Git LFS');
+    }
     const points = rows.filter(Boolean).map((row) => {
       const values = row.split(',');
       const record: Record<string, string | number> = {};
@@ -27,7 +33,7 @@ app.get('/api/observation-planner', (_req, res) => {
         record[header] = value === '' ? value : Number.isNaN(Number(value)) ? value : Number(value);
       });
       return record;
-    });
+    }).filter((point) => Number.isFinite(Number(point.grid_lat)) && Number.isFinite(Number(point.grid_lon)));
 
     return res.json({
       source: 'data/active_observation_planner/top_argo_locations.csv',

@@ -134,7 +134,13 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
     fetch('/api/observation-planner')
       .then((response) => response.ok ? response.json() : Promise.reject(new Error('planner unavailable')))
       .then((payload) => {
-        if (!cancelled && Array.isArray(payload.points)) setPlannerPoints(payload.points);
+        if (!cancelled && Array.isArray(payload.points)) {
+          // Keep map bounds valid even if a stale or incomplete planner response
+          // reaches the client.
+          setPlannerPoints(payload.points.filter((point: Record<string, unknown>) =>
+            Number.isFinite(Number(point.grid_lat)) && Number.isFinite(Number(point.grid_lon))
+          ));
+        }
       })
       .catch(() => {
         if (!cancelled) setPlannerPoints([]);
@@ -174,8 +180,12 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
     lons.push(stationData.station.lon);
     if (showPlanner) {
       plannerPoints.forEach((point) => {
-        lats.push(Number(point.grid_lat));
-        lons.push(Number(point.grid_lon));
+        const lat = Number(point.grid_lat);
+        const lon = Number(point.grid_lon);
+        if (Number.isFinite(lat) && Number.isFinite(lon)) {
+          lats.push(lat);
+          lons.push(lon);
+        }
       });
     }
 
@@ -202,6 +212,7 @@ export const CycloneMapExplorer: React.FC<CycloneMapExplorerProps> = ({
     plannerPoints.forEach((point) => {
       const lat = Number(point.grid_lat);
       const lon = Number(point.grid_lon);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
       const priority = Number(point.predicted_priority) || 0;
       const uncertainty = Number(point.prediction_uncertainty) || 0;
       const marker = L.circleMarker([lat, lon], {
